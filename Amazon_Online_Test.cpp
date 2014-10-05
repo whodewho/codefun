@@ -88,7 +88,7 @@ vector < int > convertMatrix(int width, int height, vector < int > matrix) {
 	return result;
 }
 
-void test1()
+void testConvertMatrix()
 {
 	int width=3,height=3;
 	vector<int> num(width*height, 0);
@@ -106,8 +106,6 @@ void test1()
 
 }
 
-void climber_problem()
-{
 // 3
 // 0,3,1
 // 1,4,2
@@ -117,54 +115,64 @@ void climber_problem()
 // 1,4,2
 // 3,6,1
 // 5,7,2
+
+// 5
+// 1,4,1
+// 2,5,3
+// 3,7,2
+// 6,8,3
+// 9,10,2
+void climber_problem()
+{
 	int n;
 	cin>>n;
 	int b=0;
 	vector<vector<int> > matrix(n, vector<int>(3,0));
 	for(int i=0;i<n;i++)
 	{
-		char tmp;
-		cin>>matrix[i][0]>>tmp>>matrix[i][1]>>tmp>>matrix[i][2];
+		char highestNeighbor;
+		cin>>matrix[i][0]>>highestNeighbor>>matrix[i][1]>>highestNeighbor>>matrix[i][2];
 		b=max(b, matrix[i][1]);
 	}
 
+	//bubble sort with the front index
 	for(int i=0;i<n;i++)
 	{
 		for(int j=0;j<n-i-1;j++)
 		{
 			if(matrix[j][0]>matrix[j+1][0])
 			{
-				vector<int> tmp=matrix[j+1];
+				vector<int> highestNeighbor=matrix[j+1];
 				matrix[j+1]=matrix[j];
-				matrix[j]=tmp;
+				matrix[j]=highestNeighbor;
 			}
 		}
 	}
 
-	int result=0,highest=0;
+	int result=0,highestSoFar=0;
 	for(int i=0;i<n;i++)
 	{
-		highest=max(highest, matrix[i][2]);
+		highestSoFar=max(highestSoFar, matrix[i][2]);
 
-		int j=i+1;
-		int tmp=0;
+		int j=i+1, highestNeighbor=0;
 		while(j<n&&matrix[j][0]<=matrix[i][1])
 		{
-			tmp=max(tmp, matrix[j][2]);
-			highest=max(highest, matrix[i][2]);
+			highestNeighbor=max(highestNeighbor, matrix[j][2]);
 			j++;
 		}
 
+		//if next no overlap, climb down from the highest peak so far to the ground
 		if(j==i+1)
 		{
-			result+=(2*highest);
-			highest=0;
+			result+=(2*highestSoFar);
+			highestSoFar=0;
 			continue;
 		}
 
-		if(tmp<matrix[i][2])
+		//if neighbor is lower, climb down to the lower one
+		if(highestNeighbor<matrix[i][2])
 		{
-			result+=(2*(matrix[i][2]-tmp));
+			result+=(2*(matrix[i][2]-highestNeighbor));
 		}
 	}
 
