@@ -109,6 +109,38 @@ public:
 		}
 	}
 
+	void erase(int key)
+	{
+		SkipListNode* current=header;
+		for(int i=maxLevel;i>=0;i--)
+		{
+			SkipListNode *next=current->forward[i];
+			while(next->data<key)
+			{
+				current=next;
+				next=current->forward[i];
+			}
+		}
+
+		SkipListNode* eraseNode=current->forward[0];
+		if(eraseNode->data!=key)return;
+		SkipListNode* backwardNode=current;
+		SkipListNode* forwardNode=eraseNode->forward[0];
+		forwardNode->backward=backwardNode;
+
+		while(true)
+		{
+			for(int i=min(backwardNode->forward.size()-1, eraseNode->forward.size()-1);i>=0;i--)
+			{
+				if(backwardNode->forward[i]==eraseNode)
+					backwardNode->forward[i]=eraseNode->forward[i];
+			}
+			if(backwardNode->forward.size()>=eraseNode->forward.size())break;
+			backwardNode=backwardNode->backward;
+		}
+		delete eraseNode;
+	}
+
 	void print()
 	{
 		for(int i=maxLevel;i>=0;i--)
@@ -139,9 +171,13 @@ int _tmain(int argc, _TCHAR* argv[])
 		skl->insert(tmp);
 		cout<<skl->find(tmp)<<endl;
 		skl->print();
+		if(tmp%7<=2)
+		{
+			skl->erase(tmp);
+			skl->print();
+		}
 	}
 	return 0;
 }
-
 
 
