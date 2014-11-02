@@ -21,7 +21,7 @@ using namespace std;
 /*
 	两个数组，同一组数的全排列，连接相同的两个数，线有交点，删去最少的点儿，让所有的线不相交
 	index[]的作用是，遍历v2，记录最大不想交线集合的长度为[i]时，index[i]为在v1里最优的index，这个数组是升序的，所以二分
-	跟数的大小梅关系
+	跟数的大小没关系
 */
 int minErase(vector<int> &vec1, vector<int> &vec2)
 {
