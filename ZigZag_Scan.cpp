@@ -75,3 +75,28 @@ int _tmain(int argc, _TCHAR* argv[])
 	zigzagScan(matrix);
 	return 0;
 }
+
+//O(N*N)
+public void printZigzagForm(int[][] a, int length) {  
+ 
+    int i=0,j=0;  
+ 
+    while(i < length){  
+ 
+        System.out.print(a[i][j] + " -> ");  
+ 
+        if(i==length-1){  
+            i = j+1; j = length-1;  
+        }  
+        else if(j==0){  
+            j = i+1;   
+            i = 0;  
+        }  
+        else {  
+            i++;  
+            j--;  
+        }  
+    }  
+ 
+    System.out.println();  
+}

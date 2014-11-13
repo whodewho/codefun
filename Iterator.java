@@ -5,6 +5,46 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+class LastCheckIterator<T> implements Iterator<T> {
+    Iterator<T> iterator;
+    T current;
+
+    LastCheckIterator(Iterator<T> iterator) {
+        this.iterator = iterator;
+    }
+
+    public boolean hasNext() {
+        if (current != null)
+            return true;
+        if (iterator.hasNext()) {
+            current = iterator.next();
+            return true;
+        }
+        return false;
+    }
+
+    public T next() {
+        if (hasNext()) {
+            T toReturn = current;
+            if (iterator.hasNext()) {
+                current = iterator.next();
+            } else {
+                current = null;
+            }
+            return toReturn;
+        }
+        throw new NoSuchElementException("");
+    }
+
+    public boolean isLast() {
+        return !(iterator.hasNext());
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException("");
+    }
+}
+
 class PrevIterator<T> implements Iterator<T> {
 
     Iterator<T> iterator;
@@ -153,6 +193,41 @@ class JumpIterator<T> implements Iterator<T> {
     }
 }
 
+class NegativeIterator<T> implements Iterator<T> {
+    private Iterator<T> iterator;
+    private T toReturn;
+
+    public NegativeIterator(Iterator<T> iterator) {
+        this.iterator = iterator;
+        toReturn = null;
+    }
+
+    public boolean hasNext() {
+        if (toReturn != null)
+            return true;
+        while (iterator.hasNext()) {
+            toReturn = iterator.next();
+            if ((Integer) toReturn < 0)
+                return true;
+        }
+        toReturn = null;
+        return false;
+    }
+
+    public T next() {
+        if (hasNext()) {
+            T reserve = toReturn;
+            toReturn = null;
+            return reserve;
+        }
+        throw new NoSuchElementException();
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
+}
+
 public class PeekIterator<T> implements Iterator<T> {
 
     private final Iterator<T> iterator;
@@ -198,7 +273,7 @@ public class PeekIterator<T> implements Iterator<T> {
 
     public static void main(String[] args) {
         List<Integer> l = new ArrayList<Integer>();
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < 0; i++)
             l.add(i);
         //
         // PeekIterator<Integer> pI=new PeekIterator<Integer>(l.iterator());
@@ -241,12 +316,23 @@ public class PeekIterator<T> implements Iterator<T> {
         // System.out.println(eI.next());
         // }
 
+        // System.out.println("--------------------");
+        //
+        // NegativeIterator<Integer> pI = new
+        // NegativeIterator<Integer>(l.iterator());
+        // while (pI.hasNext()) {
+        // System.out.println(pI.hasNext());
+        // System.out.println(pI.next());
+        // }
+
         System.out.println("--------------------");
 
-        PrevIterator<Integer> pI = new PrevIterator<Integer>(l.iterator());
+        LastCheckIterator<Integer> pI = new LastCheckIterator<Integer>(
+                l.iterator());
+        System.out.println(pI.isLast());
         while (pI.hasNext()) {
             System.out.println(pI.hasNext());
-            System.out.println(pI.previous());
+            System.out.println(pI.isLast());
             System.out.println(pI.next());
         }
         System.out.println("end");
